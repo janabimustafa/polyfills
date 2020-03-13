@@ -22,6 +22,9 @@ export default function(internals: CustomElementInternals) {
       this: Node, node: T, refNode: Node|null) {
     if (node instanceof DocumentFragment) {
       const insertedNodes = Utilities.childrenFromFragment(node);
+      if ((node.ownerDocument.domain.indexOf(document.domain) >= 0) && (node.ownerDocument.domain !== document.domain)) {
+        node.ownerDocument.domain = document.domain;
+      }
       const nativeResult = Native.Node_insertBefore.call(this, node, refNode);
 
       // DocumentFragments can't be connected, so `disconnectTree` will never
