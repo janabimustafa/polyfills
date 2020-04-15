@@ -20,11 +20,14 @@ export default function(internals: CustomElementInternals) {
 
   Node.prototype.insertBefore = function<T extends Node>(
       this: Node, node: T, refNode: Node|null) {
+    if ((node.ownerDocument.domain.indexOf(document.domain) >= 0) && (node.ownerDocument.domain !== document.domain)) {
+      node.ownerDocument.domain = document.domain;
+    }
+    if ((this.ownerDocument.domain.indexOf(document.domain) >= 0) && (this.ownerDocument.domain !== document.domain)) {
+      this.ownerDocument.domain = document.domain;
+    }
     if (node instanceof DocumentFragment) {
       const insertedNodes = Utilities.childrenFromFragment(node);
-      if ((node.ownerDocument.domain.indexOf(document.domain) >= 0) && (node.ownerDocument.domain !== document.domain)) {
-        node.ownerDocument.domain = document.domain;
-      }
       const nativeResult = Native.Node_insertBefore.call(this, node, refNode);
 
       // DocumentFragments can't be connected, so `disconnectTree` will never
@@ -56,6 +59,12 @@ export default function(internals: CustomElementInternals) {
   };
 
   Node.prototype.appendChild = function<T extends Node>(this: Node, node: T) {
+    if ((node.ownerDocument.domain.indexOf(document.domain) >= 0) && (node.ownerDocument.domain !== document.domain)) {
+      node.ownerDocument.domain = document.domain;
+    }
+    if ((this.ownerDocument.domain.indexOf(document.domain) >= 0) && (this.ownerDocument.domain !== document.domain)) {
+      this.ownerDocument.domain = document.domain;
+    }
     if (node instanceof DocumentFragment) {
       const insertedNodes = Utilities.childrenFromFragment(node);
       const nativeResult = Native.Node_appendChild.call(this, node) as T;

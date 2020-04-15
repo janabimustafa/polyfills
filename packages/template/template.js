@@ -78,6 +78,12 @@
 
       var origAppendChild = Node.prototype.appendChild;
       Node.prototype.appendChild = function appendChild(child) {
+        if ((child.ownerDocument.domain.indexOf(document.domain) >= 0) && (child.ownerDocument.domain !== document.domain)) {
+          child.ownerDocument.domain = document.domain;
+        }
+        if ((this.ownerDocument.domain.indexOf(document.domain) >= 0) && (this.ownerDocument.domain !== document.domain)) {
+          this.ownerDocument.domain = document.domain;
+        }
         if (child instanceof DocumentFragment) {
           insertBefore.call(this, child, null);
         } else {
